@@ -4,9 +4,9 @@
   $vzb-bs-width: 200px;
 
   width: $vzb-bs-width;
-  height: 110px;
   margin: 0 auto;
   position: relative;
+  height: 80px;
 
   .vzb-bs-slider { 
     .vzb-bs-slider-thumb-arc {
@@ -45,6 +45,7 @@
 &.vzb-large {
   .vzb-bs-holder {
     //...
+    height: 150px;
   }
 }
 
@@ -52,6 +53,7 @@
 &.vzb-medium {
   .vzb-bs-holder {
     //...
+    height: 120px;
   }
 }
 
@@ -59,6 +61,6 @@
 &.vzb-small {
   .vzb-bs-holder {
     //...
-
+    height: 90px;
   }
 }
