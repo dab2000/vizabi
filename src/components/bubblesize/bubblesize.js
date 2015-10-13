@@ -11,7 +11,7 @@ import globals from 'base/globals';
 var OPTIONS = {
   DOMAIN_MIN: 0,
   DOMAIN_MAX: 1,
-  TEXT_PARAMS: { TOP: 18, LEFT: 12, MAX_WIDTH: 15, MAX_HEIGHT: 10 },
+  TEXT_PARAMS: { TOP: 18, LEFT: 12, MAX_WIDTH: 30, MAX_HEIGHT: 10 },
   BAR_WIDTH: 6,
   THUMB_RADIUS: 10,
   THUMB_STROKE_WIDTH: 4,
@@ -70,6 +70,14 @@ var BubbleSize = Component.extend({
         }
         _this.sliderEl.call(_this.brush.extent(size));
         _this.sliderEl.call(_this.brush.event);
+      },
+      'ready': function (evt) {
+        if(_this.model.size.scale) {
+            _this.sizeScaleMinMax = _this.model.size.scale.domain();
+        }
+        if(_this._readyOnce) {
+           _this._setLabelsText();
+        }
       }
     };
 
@@ -86,14 +94,11 @@ var BubbleSize = Component.extend({
     var values = [this.model.size.min, this.model.size.max],
       _this = this;
     this.element = d3.select(this.element);
-    this.sliderSvg = this.element.select(".vzb-bs-slider-svg");
+    this.sliderSvg = this.element.select(".vzb-bs-svg");
     this.sliderWrap = this.sliderSvg.select(".vzb-bs-slider-wrap");
     this.sliderEl = this.sliderWrap.select(".vzb-bs-slider");
              
-    var boundRect = this.element.node().getBoundingClientRect();
     var
-      boundBoxWidth = boundRect.width,
-      boundBoxHeight = boundRect.height,
       textMargin = { top: OPTIONS.TEXT_PARAMS.TOP, left: OPTIONS.TEXT_PARAMS.LEFT },
       textMaxWidth = OPTIONS.TEXT_PARAMS.MAX_WIDTH,
       textMaxHeight = OPTIONS.TEXT_PARAMS.MAX_HEIGHT,
@@ -103,21 +108,21 @@ var BubbleSize = Component.extend({
       introDuration = OPTIONS.INTRO_DURATION,
       padding = {
         top: 0,
-        left: thumbRadius + thumbStrokeWidth + textMargin.left + textMaxWidth,
-        right: thumbRadius + thumbStrokeWidth + textMargin.left + textMaxWidth,
-        bottom: textMargin.top + textMaxHeight
+        left: textMargin.left + textMaxWidth, //thumbRadius + thumbStrokeWidth 
+        right: textMargin.left + textMaxWidth, //thumbRadius + thumbStrokeWidth
+        bottom: thumbRadius + thumbStrokeWidth //textMargin.top + textMaxHeight
       }
+      
+    this.padding = padding;
 
     var minMaxBubbleRadius = this.getMinMaxBubbleRadius(); 
-    var sliderWidth = boundBoxWidth - padding.left - padding.right,
-        sliderHeight = boundBoxHeight - padding.top - padding.bottom;
 
     this.xScale = d3.scale.linear()
       .domain([OPTIONS.DOMAIN_MIN, OPTIONS.DOMAIN_MAX])
       .range([minMaxBubbleRadius.min * 2, minMaxBubbleRadius.max * 2])
       .clamp(true)
 
-    _this.brush = d3.svg.brush()
+    this.brush = d3.svg.brush()
       .x(this.xScale)
       .extent([OPTIONS.DOMAIN_MIN, OPTIONS.DOMAIN_MIN])
       .on("brush", function () {
@@ -132,25 +137,26 @@ var BubbleSize = Component.extend({
          _this.sliderEl.selectAll(".resize")
           .style("display", null)
       });
-    
-    this.sliderSvg
-      .attr("width", sliderWidth + padding.left + padding.right)
-      .attr("height", sliderHeight + padding.top + padding.bottom)
-    this.sliderWrap.attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+   
     this.sliderEl
       .call(_this.brush);
-
-    var thumbArc = d3.svg.arc()
-      .outerRadius(thumbRadius)
-      .startAngle(0)
-      .endAngle(2 * Math.PI)
-
+      
+    //For return to arc
+    //var thumbArc = d3.svg.arc()
+    //  .outerRadius(thumbRadius)
+    //  .startAngle(0)
+    //  .endAngle(2 * Math.PI)
+    
     this.sliderThumbs = this.sliderEl.selectAll(".resize").sort(d3.descending)
       .classed("vzb-bs-slider-thumb", true)
     
-    this.sliderThumbs.append("path")
+    this.sliderThumbs.append("g")
       .attr("class", "vzb-bs-slider-thumb-badge")
-      .attr("d", thumbArc)
+      .append("path")
+      .attr("d", "M0 0 l" + (thumbRadius * 2) + " " + (-thumbRadius) + "v" + (thumbRadius * 2) + "Z")
+      //For return to arc
+      //.attr("d", thumbArc)
+      
     this.sliderThumbs.append("path")
       .attr("class", "vzb-bs-slider-thumb-arc")
     this.sliderEl.selectAll("text").data([0,0]).enter()
@@ -159,6 +165,9 @@ var BubbleSize = Component.extend({
       .attr("dy", "0.35em")
       .attr("text-anchor", function(d, i) {
         return i ? "start" : "end"})
+    
+    this.sliderLabelsEl = this.sliderEl.selectAll("text.vzb-bs-slider-thumb-label");
+    
     this.sliderEl.selectAll("rect")
       .attr("height", barWidth)
       .attr("rx", barWidth * 0.25)
@@ -180,9 +189,8 @@ var BubbleSize = Component.extend({
     }
 
     function updateLabels(s) {
-      _this.sliderEl.selectAll("text.vzb-bs-slider-thumb-label").data(s)
-      .attr("transform", circleLabelTransform)
-      .text(function (d) { return d.toFixed(2); });
+      _this.sliderLabelsEl.data(s)
+      .attr("transform", circleLabelTransform);
     }
     
     var arcLabelTransform = function(d, i) {
@@ -196,32 +204,39 @@ var BubbleSize = Component.extend({
            dY = -textMargin.top;
        return "translate(" + (dX) + "," + (dY) + ")";      
     }
-    
-    //this.indicatorEl = this.element.selectAll('.vzb-bs-slider .vzb-bs-slider-thumb-label');
+
     this.on("resize", function() {
       //console.log("EVENT: resize");
+      
       _this.xScale.range([_this.getMinMaxBubbleRadius().min * 2, _this.getMinMaxBubbleRadius().max * 2]);
-      this.sliderEl
-        .attr("transform", "translate(" + (sliderWidth - this.getMinMaxBubbleRadius().max * 2) * 0.5 + "," + sliderHeight + ")")
+      _this._updateSize();
+      
+      _this.sliderEl
+        //.attr("transform", "translate(" + (sliderWidth - _this.getMinMaxBubbleRadius().max * 2) * 0.5 + "," 
+        //  + (sliderHeight * 0.5) + ")")
         .call(_this.brush.extent(_this.brush.extent()))
         .call(_this.brush.event);
+
     });
-    
+
+    this._updateSize();
     this.sliderEl
-      .attr("transform", "translate(" + (sliderWidth - this.getMinMaxBubbleRadius().max * 2) * 0.5 + "," + sliderHeight + ")")
+      //.attr("transform", "translate(" + (sliderWidth - this.getMinMaxBubbleRadius().max * 2) * 0.5 + ","
+      //   + (sliderHeight * 0.5) + ")")
       .call(this.brush.extent(values))
       .call(this.brush.event);
-  },
-
-  modelReady: function () {
-//    this.indicatorEl.data([this.model.size.min, this.model.size.max])
-//      .text(function (d) { return d; });
-  },
-
-  getSizeDomainValues: function() {
-    this.model.size.scale.domain()
-    this.model.size.tickFormatter(1376048943)  
     
+    if(this.sizeScaleMinMax) {
+      this._setLabelsText();
+    }    
+  },
+  
+  ready: function() {
+    var _this = this;
+    
+    if(_this.model.size.scale) {  
+      //_this._setLabelsText()
+    }
   },
   
   getMinMaxBubbleRadius: function() {
@@ -232,15 +247,26 @@ var BubbleSize = Component.extend({
    * RESIZE:
    * Executed whenever the container is resized
    */
-  updateSize: function() {
+  _updateSize: function() {
     var _this = this;
 
-//    this.activeProfile = profiles[this.getLayoutProfile()];
+      _this.sliderSvg
+        .attr("height", _this.getMinMaxBubbleRadius().max * 2 + _this.padding.top + _this.padding.bottom)
+        .attr("width", _this.getMinMaxBubbleRadius().max * 2 + _this.padding.left + _this.padding.right)
+      _this.sliderWrap
+        .attr("transform", "translate(" + _this.padding.left + "," + (_this.getMinMaxBubbleRadius().max * 2 + _this.padding.top + _this.padding.bottom) * 0.5 + ")")
   },
   //slideHandler: function () {
   //  this._setValue(+d3.event.target.value);
   //},
 
+  _setLabelsText: function() {
+      var _this = this;
+      _this.sliderLabelsEl
+        .data([_this.model.size.tickFormatter(_this.sizeScaleMinMax[0]),_this.model.size.tickFormatter(_this.sizeScaleMinMax[1])])
+        .text(function (d) { return d; });    
+  },
+  
   /**
    * Sets the current value in model. avoid updating more than once in framerate
    * @param {number} value

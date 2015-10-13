@@ -1,14 +1,21 @@
 //general styles
 .vzb-bs-holder {
 
-  $vzb-bs-width: 200px;
+  $vzb-bs-width: 240px;
 
   width: $vzb-bs-width;
   margin: 0 auto;
   position: relative;
-  height: 80px;
+  //height: 116px;
+  
+  .vzb-bs-svg {
+    margin: 0 auto;
+    display: block;
+    position: relative;
+  }
 
   .vzb-bs-slider { 
+
     .vzb-bs-slider-thumb-arc {
       fill: none;
       pointer-events: none; 
@@ -28,7 +35,8 @@
     .vzb-bs-slider-thumb-badge {
       fill: rgba($vzb-color-primary, 1);
       stroke: $vzb-color-white;
-      stroke-width: 4px;
+      stroke-width: 2px;
+      stroke-linejoin: round;
       stroke-opacity: 1;
     }
     
