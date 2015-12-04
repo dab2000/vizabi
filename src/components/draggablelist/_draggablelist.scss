@@ -4,6 +4,12 @@
     margin: auto;
     padding: 0;
     width: 200px;
+    [draggable=true] {
+      position: relative;
+      &.dragged {
+        z-index: 100;
+      }
+    }
     li {
       cursor: move;
       background: $vzb-color-primary-lightest;
