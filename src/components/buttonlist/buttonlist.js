@@ -32,7 +32,6 @@ var ButtonList = Component.extend({
     var _this = this;
     this.name = 'gapminder-buttonlist';
     this.template = '<div class="vzb-buttonlist"></div>';
-    this._curr_dialog_index = 20;
 
     this.model_expects = [{
       name: "state",
@@ -183,8 +182,6 @@ var ButtonList = Component.extend({
     var button_expand = this.model.ui.buttons_expand;
 
     this.element = d3.select(this.element);
-    this.dialogContainerEl = this.element.append("div")
-      .attr("class", "vzb-buttonlist-container-dialogs");
     this.buttonContainerEl = this.element.append("div")
       .attr("class", "vzb-buttonlist-container-buttons");
 
@@ -224,6 +221,9 @@ var ButtonList = Component.extend({
         classes = btn.attr("class"),
         btn_config = _this._available_buttons[id];
 
+
+       // _this.root.findChildByName("gapminder-treemenu")
+
       //if it's a dialog, open
       if(btn_config && btn_config.dialog) {
 
@@ -241,23 +241,6 @@ var ButtonList = Component.extend({
 
     });
 
-    var close_buttons = this.element.selectAll(".vzb-buttonlist-dialog").select("[data-click='closeDialog']");
-    close_buttons.on('click', function(type, index) {
-      _this.closeDialog(_this.model.ui.buttons[index]);
-    });
-    var pinDialog = this.element.selectAll("[data-click='pinDialog']");
-    pinDialog.on('click', function() {
-      _this.pinDialog(this);
-    });
-
-    d3.selectAll(".vzb-buttonlist-container-dialogs").on('click', function() {
-      d3.event.stopPropagation();
-    });
-
-    this.root.element.addEventListener('click', function() {
-      _this.closeAllDialogs();
-    });
-
     //store body overflow
     this._prev_body_overflow = document.body.style.overflow;
 
@@ -265,22 +248,6 @@ var ButtonList = Component.extend({
     this.setBubbleLock();
     this.setPresentationMode();
 
-    d3.select(this.root.element).on("mousedown", function(e) {
-      if(!this._active_comp) return; //don't do anything if nothing is open
-
-      var target = d3.event.target;
-      var closeDialog = true;
-      while(target) {
-        if(target.classList.contains("vzb-dialog-modal")) {
-          closeDialog = false;
-          break;
-        }
-        target = target.parentElement;
-      }
-      if(closeDialog) {
-        _this.closeAllDialogs();
-      }
-    });
   },
 
   /*
@@ -414,20 +381,6 @@ var ButtonList = Component.extend({
       var btn = button_list[i];
       var btn_config = this._available_buttons[btn];
 
-      //if it's a dialog, add component
-      if(btn_config && btn_config.dialog) {
-        var comps = this._components_config;
-
-        //add corresponding component
-        comps.push({
-          component: btn_config.dialog,
-          placeholder: '.vzb-buttonlist-dialog[data-btn="' + btn + '"]',
-          model: ["state", "ui", "language"]
-        });
-
-        btn_config.component = comps.length - 1;
-      }
-
       //add template data
       var d = (btn_config) ? btn : "_default";
       var details_btn = this._available_buttons[d];
@@ -460,37 +413,8 @@ var ButtonList = Component.extend({
           t(btn.title) + "</span>";
       });
 
-    this.dialogContainerEl.selectAll('div').data(details_btns)
-      .enter().append("div")
-      .attr('class', function (d) {
-        var cls = 'vzb-buttonlist-dialog';
-        if (button_expand && button_expand.length > 0) {
-          if (button_expand.indexOf(d.id) > -1) {
-            cls += ' vzb-dialog-side';
-          }
-        }
-
-        return cls;
-      })
-      .attr('data-btn', function(d) {
-        return d.id;
-      });
-
-    this.loadComponents();
-
-    var _this = this;
-    //render each subcomponent
-    utils.forEach(this.components, function(subcomp) {
-      subcomp.render();
-      _this.on('resize', function() {
-        subcomp.trigger('resize');
-      });
-      subcomp.on('dragstart', function() {
-        _this.bringForward(subcomp.name);
-      });
-    });
   },
-
+  
 
   scrollToEnd: function() {
     var target = 0;
@@ -641,12 +565,6 @@ var ButtonList = Component.extend({
       if(availBtns[dialogName].ispin)
         this.pinDialog(dialogName);
     }.bind(this));
-  },
-
-  bringForward: function(id) {
-    var dialog = this.element.select(".vzb-buttonlist-dialog[data-btn='" + id + "']");
-    dialog.style('z-index', this._curr_dialog_index);
-    this._curr_dialog_index += 10;
   },
 
   toggleBubbleTrails: function() {
