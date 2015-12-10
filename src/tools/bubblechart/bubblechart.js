@@ -5,6 +5,7 @@ import BubbleChartComponent from './bubblechart-component';
 import {
   timeslider,
   buttonlist,
+  dialogs,
   treemenu,
   datawarning
 } from 'components/_index';
@@ -33,6 +34,10 @@ var BubbleChart = Tool.extend('BubbleChart', {
     }, {
       component: buttonlist,
       placeholder: '.vzb-tool-buttonlist',
+      model: ['state', 'ui', 'language']
+    }, {
+      component: dialogs,
+      placeholder: '.vzb-tool-dialogs',
       model: ['state', 'ui', 'language']
     }, {
       component: treemenu,

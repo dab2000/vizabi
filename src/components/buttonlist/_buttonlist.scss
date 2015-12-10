@@ -109,7 +109,8 @@ $vzb-dialog-content-height: 250px;
   }
 }
 
-@import 'dialogs/dialog';
+//TODO: move to _main.scss
+@import '../dialogs/dialog';
 
 //responsiveness
 
