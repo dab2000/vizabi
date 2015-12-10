@@ -7,7 +7,6 @@ $vzb-button-color: $vzb-color-primary-dark;
 $vzb-button-color-title: $vzb-color-primary-light;
 $vzb-button-color-title-active: $vzb-button-color;
 $vzb-button-color-border: #cce6ed;
-$vzb-dialog-content-height: 250px;
 
 
 .vzb-buttonlist {
@@ -175,16 +174,8 @@ $vzb-dialog-content-height: 250px;
 &.vzb-large {
   &.vzb-button-expand-true {
     .vzb-buttonlist {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .vzb-buttonlist-container-dialogs {
-      display: flex;
-      flex-direction: column;
-      flex: auto;
-      overflow-x: hidden;
-      overflow-y: auto;
+//      display: flex;
+//      flex-direction: column;
     }
 
     .vzb-buttonlist-container-buttons {

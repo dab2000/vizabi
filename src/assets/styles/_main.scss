@@ -163,15 +163,36 @@
   }
 
   $vzb-button-expand-width: 290px;
-  
+  $vzb-button-expand-height: 73px;
+ 
   &.vzb-large {
     &.vzb-button-expand-true {
-      .vzb-tool-stage {
-        right: $vzb-button-expand-width;
-      }
- 
-      .vzb-tool-buttonlist {
-        width: $vzb-button-expand-width;
+      .vzb-tool-content {
+        display: flex;
+
+        .vzb-tool-stage {
+          flex: 1 auto;
+          display: flex;
+          flex-direction: column;
+          position: static;
+        }
+      
+        .vzb-tool-dialogs {
+          flex: 0 0 $vzb-button-expand-width;
+          display: flex;
+          flex-direction: column;
+          position: static;
+          margin-bottom: $vzb-button-expand-height;
+          background-color: $vzb-color-primary-lightest;
+  
+          //width: $vzb-button-expand-width;
+        }
+  
+        .vzb-tool-buttonlist {
+          width: $vzb-button-expand-width;
+          height: $vzb-button-expand-height;
+          top: auto;
+        }
       }
     }
   }

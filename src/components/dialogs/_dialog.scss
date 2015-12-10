@@ -1,3 +1,5 @@
+$vzb-dialog-content-height: 250px;
+
 .vzb-dialogs {
   .vzb-buttonlist-dialog {
     @include box-shadow(0, 8px, 15px, rgba(0, 0, 0, .24));
@@ -344,6 +346,12 @@
 &.vzb-large {
   &.vzb-button-expand-true {
     .vzb-dialogs {
+      display: flex;
+      flex-direction: column;
+      flex: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+
       .vzb-buttonlist-dialog {
         &.vzb-dialog-side {
           visibility: visible;
