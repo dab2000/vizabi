@@ -15,6 +15,7 @@ var class_active = "vzb-active";
 var class_expand_dialog = "vzb-dialog-side";
 
 var closeCallback;
+var closeAllCallback;
 var pinCallback;
 
 var Dialogs = Component.extend({
@@ -22,6 +23,11 @@ var Dialogs = Component.extend({
   closeCallback: function(input) {
     if(!arguments.length) return closeCallback;
     closeCallback = input;
+    return this;
+  },
+  closeAllCallback: function(input) {
+    if(!arguments.length) return closeAllCallback;
+    closeAllCallback = input;
     return this;
   },
   pinCallback: function(input) {
@@ -415,6 +421,8 @@ var Dialogs = Component.extend({
     }
     if(this._active_comp && !this._available_buttons[this._active_comp.name].ispin)
       this._active_comp = false;
+
+    //if(closeAllCallback) closeAllCallback(forceclose);
 
     this.model.state.entities.setNeedUpdate();
   },

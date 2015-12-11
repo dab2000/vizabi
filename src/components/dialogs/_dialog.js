@@ -50,7 +50,7 @@ var Dialog = Component.extend({
     this.dragContainerEl = d3.select('.vzb-tool-stage');
     var profile = this.getLayoutProfile();
 
-    var dg = dialogDrag(this.placeholderEl, this.dragContainerEl, 130);
+    var dg = dialogDrag(this.placeholderEl, this.dragContainerEl, 10);
     var dragBehavior = d3.behavior.drag()
       .on('dragstart', function D3dialogDragStart() {
         _this.trigger('dragstart');
@@ -121,7 +121,7 @@ var Dialog = Component.extend({
 
   beforeOpen: function() {
     var _this = this;
-
+    
     this.transitionEvents = ['webkitTransitionEnd', 'transitionend', 'msTransitionEnd', 'oTransitionEnd'];
     this.transitionEvents.forEach(function(event) {
       _this.placeholderEl.on(event, _this.transitionEnd.bind(_this, event));
@@ -159,6 +159,7 @@ var Dialog = Component.extend({
   },
 
   beforeClose: function() {
+//issues: 369 & 442
     if(this.rootEl.classed('vzb-portrait') && this.getLayoutProfile() === 'small') {
       this.placeholderEl.style('top', 'auto'); // issues: 369 & 442
     }
@@ -175,6 +176,9 @@ var Dialog = Component.extend({
       var topPos = this.placeholderEl.style('top');
       if( topPos.charAt(0) !== "-") this.topPos = topPos;
     }
+
+
+//issues: 369 & 442
     if(!(this.rootEl.classed('vzb-portrait') && this.getLayoutProfile() === 'small')) {
       this.placeholderEl.style('top', ''); // issues: 369 & 442
     }
@@ -188,7 +192,7 @@ var Dialog = Component.extend({
     this.transitionEvents.forEach(function(event) {
       _this.placeholderEl.on(event, null);
     });
-    this.placeholderEl.classed('notransition', true);
+    if(this.isOpen) this.placeholderEl.classed('notransition', true);
   }
 
 });
@@ -231,11 +235,11 @@ function dialogDrag(element, container, xOffset) {
         posY = touchCoord[0][1];
       }
       var aX = posX - diffX,
-      aY = posY - diffY;
-      if(aX > -xOffset) aX = -xOffset;
+        aY = posY - diffY;
+      if(aX < 0) aX = 0;
       if(aY < 0) aY = 0;
-      if(-aX + eWi > cWi) aX = -cWi + eWi;
-      if(eHe + aY > cHe) aY = cHe - eHe;
+      if(aX + eWi > cWi) aX = cWi - eWi;
+      if(aY + eHe > cHe) aY = cHe - eHe;
 
       this.move(aX, aY);
     }

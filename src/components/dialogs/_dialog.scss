@@ -4,10 +4,11 @@ $vzb-dialog-content-height: 250px;
   .vzb-dialogs-dialog {
     @include box-shadow(0, 8px, 15px, rgba(0, 0, 0, .24));
     @include transition(all 300ms ease-in-out);
-    @include position(absolute, null null -450px 50%);
+    @include position(absolute, null 0 -450px 0);
     border-top: 1px solid #f7f7f7;
     width: 280px;
-    margin-left: -140px;
+    margin: 0;
+    //margin-left: -140px;
     z-index: -2;
     vertical-align: top;
     background-color: #fff;
@@ -17,7 +18,7 @@ $vzb-dialog-content-height: 250px;
     overflow: hidden;
   
     &.vzb-active {
-      @include position(absolute, null null 45px 50%);
+      @include position(absolute, null 0 45px 0);
       z-index: 20;
       visibility: visible;
     }
@@ -280,10 +281,10 @@ $vzb-dialog-content-height: 250px;
 &.vzb-medium {
   .vzb-dialogs {
     .vzb-dialogs-dialog {
-      @include position(absolute, -2000px 40px auto -130px);
+      @include position(absolute, -2000px $size-button-list auto auto);
 
       &.vzb-active {
-        @include position(absolute, 20px 40px auto -130px);
+        @include position(absolute, 20px $size-button-list auto auto);
       }
     }
   }
@@ -317,6 +318,7 @@ $vzb-dialog-content-height: 250px;
   &.vzb-portrait {
     .vzb-dialogs {
       .vzb-dialogs-dialog {
+        margin: auto;
         .vzb-dialog-content.vzb-dialog-content-fixed {
           max-height: $vzb-dialog-content-height - 50px;
         }
@@ -325,7 +327,7 @@ $vzb-dialog-content-height: 250px;
   }
   &.vzb-landscape {
     .vzb-dialogs-dialog {
-      @include position(absolute, -2000px 40px auto -130px);
+      @include position(absolute, -2000px $size-button-list auto auto);
 
       .vzb-dialog-content,
       .vzb-dialog-content.vzb-dialog-content-fixed {
@@ -353,6 +355,8 @@ $vzb-dialog-content-height: 250px;
       overflow-y: auto;
 
       .vzb-dialogs-dialog {
+        right: -10px;
+        margin-right: $vzb-button-expand-width;
         &.vzb-dialog-side {
           visibility: visible;
           display: block;

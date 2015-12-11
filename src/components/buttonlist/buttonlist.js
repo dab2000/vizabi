@@ -247,6 +247,9 @@ var ButtonList = Component.extend({
     this.setBubbleTrails();
     this.setBubbleLock();
     this.setPresentationMode();
+    
+    this.dialogsComp = this.root.findChildByName("gapminder-dialogs")
+      .closeAllCallback(this.closeAllDialogs.bind(this));
 
   },
 
@@ -471,9 +474,9 @@ var ButtonList = Component.extend({
       btn.classed(class_hide_btn, true);
       //dialog.classed(class_expand_dialog, true);
     }
-    this.root.findChildByName("gapminder-dialogs")
-      .closeCallback(this.closeDialog)
-      .pinCallback(this.pinDialog)
+    this.dialogsComp
+      .closeCallback(this.closeDialog.bind(this))
+      .pinCallback(this.pinDialog.bind(this))
       .openDialog(id);
 
     //call component function
@@ -531,9 +534,9 @@ var ButtonList = Component.extend({
     //  this._active_comp.close();
     // }
     //this._active_comp = false;
-    this.root.findChildByName("gapminder-dialogs")
+    this.dialogsComp
       .closeCallback(null)
-      .pinCallback(this.pinDialog)
+      .pinCallback(this.pinDialog.bind(this))
       .closeDialog(id);
   },
 
