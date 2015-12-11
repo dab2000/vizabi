@@ -1,7 +1,7 @@
 $vzb-dialog-content-height: 250px;
 
 .vzb-dialogs {
-  .vzb-buttonlist-dialog {
+  .vzb-dialogs-dialog {
     @include box-shadow(0, 8px, 15px, rgba(0, 0, 0, .24));
     @include transition(all 300ms ease-in-out);
     @include position(absolute, null null -450px 50%);
@@ -279,7 +279,7 @@ $vzb-dialog-content-height: 250px;
 &.vzb-large,
 &.vzb-medium {
   .vzb-dialogs {
-    .vzb-buttonlist-dialog {
+    .vzb-dialogs-dialog {
       @include position(absolute, -2000px 40px auto -130px);
 
       &.vzb-active {
@@ -292,7 +292,7 @@ $vzb-dialog-content-height: 250px;
 &.vzb-small {
   // issues: 369 & 442
   .vzb-dialogs {
-    .vzb-buttonlist-dialog {
+    .vzb-dialogs-dialog {
       &.vzb-active {
         top: auto;
       }
@@ -316,7 +316,7 @@ $vzb-dialog-content-height: 250px;
 
   &.vzb-portrait {
     .vzb-dialogs {
-      .vzb-buttonlist-dialog {
+      .vzb-dialogs-dialog {
         .vzb-dialog-content.vzb-dialog-content-fixed {
           max-height: $vzb-dialog-content-height - 50px;
         }
@@ -324,7 +324,7 @@ $vzb-dialog-content-height: 250px;
     }
   }
   &.vzb-landscape {
-    .vzb-buttonlist-dialog {
+    .vzb-dialogs-dialog {
       @include position(absolute, -2000px 40px auto -130px);
 
       .vzb-dialog-content,
@@ -352,7 +352,7 @@ $vzb-dialog-content-height: 250px;
       overflow-x: hidden;
       overflow-y: auto;
 
-      .vzb-buttonlist-dialog {
+      .vzb-dialogs-dialog {
         &.vzb-dialog-side {
           visibility: visible;
           display: block;

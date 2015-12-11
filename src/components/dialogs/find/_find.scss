@@ -1,5 +1,5 @@
-.vzb-buttonlist {
-  .vzb-buttonlist-dialog {
+.vzb-dialogs {
+  .vzb-dialogs-dialog {
     &[data-btn='find'] {
       .vzb-find-filter {
         display: inline-block;
@@ -13,7 +13,7 @@
 //responsiveness
 &.vzb-large {
   &.vzb-button-expand-true {
-    .vzb-buttonlist-dialog {
+    .vzb-dialogs-dialog {
       &.vzb-dialog-side {
         &[data-btn="find"] {
           display: flex;

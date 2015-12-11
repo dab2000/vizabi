@@ -453,46 +453,50 @@ var ButtonList = Component.extend({
    */
   openDialog: function(id) {
 
-    this.closeAllDialogs();
+    //this.closeAllDialogs();
 
-    var btn = this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']"),
-      dialog = this.element.selectAll(".vzb-buttonlist-dialog[data-btn='" + id + "']");
+    var btn = this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']");
+    //var dialog = this.element.selectAll(".vzb-buttonlist-dialog[data-btn='" + id + "']");
 
-    this._active_comp = this.components[this._available_buttons[id].component];
+    //this._active_comp = this.components[this._available_buttons[id].component];
 
-    this._active_comp.beforeOpen();
+    //this._active_comp.beforeOpen();
     //add classes
     btn.classed(class_active, true);
-    dialog.classed(class_active, true);
+    //dialog.classed(class_active, true);
 
-    this.bringForward(id);
+    //this.bringForward(id);
 
     if (this.getLayoutProfile() === 'large' && this.model.ui.buttons_expand.indexOf(id) !== -1) {
       btn.classed(class_hide_btn, true);
-      dialog.classed(class_expand_dialog, true);
+      //dialog.classed(class_expand_dialog, true);
     }
+    this.root.findChildByName("gapminder-dialogs")
+      .closeCallback(this.closeDialog)
+      .pinCallback(this.pinDialog)
+      .openDialog(id);
 
     //call component function
-    this._active_comp.open();
+    //this._active_comp.open();
   },
 
 
   pinDialog: function(button) {
     var id = typeof button === 'string' ? button : button.getAttribute('data-dialogtype');
     var btn = this.element.select(".vzb-buttonlist-btn[data-btn='" + id + "']");
-    var dialog = this.element.select(".vzb-buttonlist-dialog[data-btn='" + id + "']");
+    //var dialog = this.element.select(".vzb-buttonlist-dialog[data-btn='" + id + "']");
     if(this._available_buttons[id].ispin) {
       // button.textContent = '';
       btn.classed('pinned', false);
-      this.element.select(".vzb-buttonlist-dialog[data-btn='" + id + "']").classed('pinned', false);
+      //this.element.select(".vzb-buttonlist-dialog[data-btn='" + id + "']").classed('pinned', false);
       this._available_buttons[id].ispin = false;
-      this._active_comp.isPin = false;
+      //this._active_comp.isPin = false;
     } else {
       //  button.textContent = '';
       btn.classed('pinned', true);
-      dialog.classed('pinned', true);
+      //dialog.classed('pinned', true);
       this._available_buttons[id].ispin = true;
-      this._active_comp.isPin = true;
+      //this._active_comp.isPin = true;
     }
   },
 
@@ -502,31 +506,35 @@ var ButtonList = Component.extend({
    * @param {String} id button id
    */
   closeDialog: function(id) {
-    var btn = this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']"),
-      dialog = this.element.selectAll(".vzb-buttonlist-dialog[data-btn='" + id + "']");
+    var btn = this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']");
+    //var dialog = this.element.selectAll(".vzb-buttonlist-dialog[data-btn='" + id + "']");
 
-    this._active_comp = this.components[this._available_buttons[id].component];
+    //this._active_comp = this.components[this._available_buttons[id].component];
 
     if(this._available_buttons[id].ispin)
       this.pinDialog(id);
 
-    if(this._active_comp) {
-      this._active_comp.beforeClose();
-    }
+    //if(this._active_comp) {
+    //  this._active_comp.beforeClose();
+    //}
     //remove classes
     btn.classed(class_active, false);
-    dialog.classed(class_active, false);
+    //dialog.classed(class_active, false);
 
     if (this.getLayoutProfile() === 'large' && this.model.ui.buttons_expand.indexOf(id) !== -1) {
       btn.classed(class_hide_btn, false);
-      dialog.classed(class_expand_dialog, false);
+      //dialog.classed(class_expand_dialog, false);
     }
 
     //call component close function
-    if(this._active_comp) {
-      this._active_comp.close();
-    }
-    this._active_comp = false;
+    //if(this._active_comp) {
+    //  this._active_comp.close();
+    // }
+    //this._active_comp = false;
+    this.root.findChildByName("gapminder-dialogs")
+      .closeCallback(null)
+      .pinCallback(this.pinDialog)
+      .closeDialog(id);
   },
 
   /*
@@ -535,27 +543,27 @@ var ButtonList = Component.extend({
   closeAllDialogs: function(forceclose) {
     //remove classes
     var btnClass = forceclose ? ".vzb-buttonlist-btn" : ".vzb-buttonlist-btn:not(.pinned)";
-    var dialogClass = forceclose ? ".vzb-buttonlist-dialog" : ".vzb-buttonlist-dialog:not(.pinned)";
-    var all_btns = this.element.selectAll(btnClass),
-      all_dialogs = this.element.selectAll(dialogClass);
+    //var dialogClass = forceclose ? ".vzb-buttonlist-dialog" : ".vzb-buttonlist-dialog:not(.pinned)";
+    var all_btns = this.element.selectAll(btnClass);
+    //var all_dialogs = this.element.selectAll(dialogClass);
     if(forceclose)
       this.unpinAllDialogs();
 
-    if(this._active_comp && (forceclose || !this._available_buttons[this._active_comp.name].ispin)) {
-      this._active_comp.beforeClose();
-    }
+    //if(this._active_comp && (forceclose || !this._available_buttons[this._active_comp.name].ispin)) {
+    //  this._active_comp.beforeClose();
+    //}
 
     all_btns.classed(class_active, false);
-    all_dialogs.classed(class_active, false);
+    //all_dialogs.classed(class_active, false);
 
     //call component close function
-    if(this._active_comp && (forceclose || !this._available_buttons[this._active_comp.name].ispin)) {
-      this._active_comp.close();
-    }
-    if(this._active_comp && !this._available_buttons[this._active_comp.name].ispin)
-      this._active_comp = false;
+    //if(this._active_comp && (forceclose || !this._available_buttons[this._active_comp.name].ispin)) {
+    //  this._active_comp.close();
+    //}
+    //if(this._active_comp && !this._available_buttons[this._active_comp.name].ispin)
+    //  this._active_comp = false;
 
-    this.model.state.entities.setNeedUpdate();
+    //this.model.state.entities.setNeedUpdate();
   },
 
   unpinAllDialogs: function() {
