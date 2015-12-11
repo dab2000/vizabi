@@ -281,10 +281,10 @@ $vzb-dialog-content-height: 250px;
 &.vzb-medium {
   .vzb-dialogs {
     .vzb-dialogs-dialog {
-      @include position(absolute, -2000px $size-button-list auto auto);
-
+      @include position(absolute, -2000px -10px auto auto);
+      margin-right: $size-button-list;
       &.vzb-active {
-        @include position(absolute, 20px $size-button-list auto auto);
+        @include position(absolute, 20px -10px auto auto);
       }
     }
   }
@@ -327,8 +327,6 @@ $vzb-dialog-content-height: 250px;
   }
   &.vzb-landscape {
     .vzb-dialogs-dialog {
-      @include position(absolute, -2000px $size-button-list auto auto);
-
       .vzb-dialog-content,
       .vzb-dialog-content.vzb-dialog-content-fixed {
         max-height: $vzb-dialog-content-height - 100px !important;
@@ -355,7 +353,6 @@ $vzb-dialog-content-height: 250px;
       overflow-y: auto;
 
       .vzb-dialogs-dialog {
-        right: -10px;
         margin-right: $vzb-button-expand-width;
         &.vzb-dialog-side {
           visibility: visible;
