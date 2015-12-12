@@ -76,7 +76,6 @@ var Dialog = Component.extend({
     if(this.placeholderEl) {
       var profile = this.getLayoutProfile();
       var chartWidth = parseInt(this.dragContainerEl.style('width'), 10);
-      var dialogLeft = parseInt(this.placeholderEl.style('left'), 10);
       var dialogRight = parseInt(this.placeholderEl.style('right'), 10);
       var chartHeight = parseInt(this.rootEl.style('height'), 10);
       var dialogTop = parseInt(this.placeholderEl.style('top'), 10);

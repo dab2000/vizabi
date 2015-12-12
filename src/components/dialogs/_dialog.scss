@@ -1,6 +1,6 @@
 $vzb-dialog-content-height: 250px;
 
-.vzb-dialogs {
+.vzb-tool-dialogs {
   .vzb-dialogs-dialog {
     @include box-shadow(0, 8px, 15px, rgba(0, 0, 0, .24));
     @include transition(all 300ms ease-in-out);
@@ -279,7 +279,7 @@ $vzb-dialog-content-height: 250px;
 &.vzb-landscape,
 &.vzb-large,
 &.vzb-medium {
-  .vzb-dialogs {
+  .vzb-tool-dialogs {
     .vzb-dialogs-dialog {
       @include position(absolute, -2000px -10px auto auto);
       margin-right: $size-button-list;
@@ -292,7 +292,7 @@ $vzb-dialog-content-height: 250px;
 
 &.vzb-small {
   // issues: 369 & 442
-  .vzb-dialogs {
+  .vzb-tool-dialogs {
     .vzb-dialogs-dialog {
       &.vzb-active {
         top: auto;
@@ -316,7 +316,7 @@ $vzb-dialog-content-height: 250px;
   }
 
   &.vzb-portrait {
-    .vzb-dialogs {
+    .vzb-tool-dialogs {
       .vzb-dialogs-dialog {
         margin: auto;
         .vzb-dialog-content.vzb-dialog-content-fixed {
@@ -345,7 +345,7 @@ $vzb-dialog-content-height: 250px;
 
 &.vzb-large {
   &.vzb-button-expand-true {
-    .vzb-dialogs {
+    .vzb-tool-dialogs {
       display: flex;
       flex-direction: column;
       flex: auto;

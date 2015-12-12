@@ -46,7 +46,7 @@ var Dialogs = Component.extend({
     //set properties
     var _this = this;
     this.name = 'gapminder-dialogs';
-    this.template = '<div class="vzb-dialogs"></div>';
+    //this.template = '<div class="vzb-dialogs"></div>';
     this._curr_dialog_index = 20;
 
     
@@ -173,8 +173,9 @@ var Dialogs = Component.extend({
     var _this = this;
     var button_expand = this.model.ui.buttons_expand;
 
-    this.element = d3.select(this.element);
-    this.dialogContainerEl = d3.select(".vzb-dialogs");
+    this.element = d3.select(this.placeholder);
+
+    this.element.selectAll("div").remove();
   
     // if button_expand has been passed in with boolean param or array must check and covert to array
     if (button_expand){
@@ -200,16 +201,16 @@ var Dialogs = Component.extend({
       this._addButtons();
     }
   
-    var close_buttons = this.dialogContainerEl.selectAll(".vzb-dialogs-dialog").select("[data-click='closeDialog']");
+    var close_buttons = this.element.selectAll(".vzb-dialogs-dialog").select("[data-click='closeDialog']");
     close_buttons.on('click', function(type, index) {
       _this.closeDialog(_this.model.ui.buttons[index]);
     });
-    var pinDialog = this.dialogContainerEl.selectAll("[data-click='pinDialog']");
+    var pinDialog = this.element.selectAll("[data-click='pinDialog']");
     pinDialog.on('click', function() {
       _this.pinDialog(this);
     });
 
-    this.dialogContainerEl.on('click', function() {
+    this.element.on('click', function() {
       d3.event.stopPropagation();
     });
 
@@ -273,7 +274,7 @@ var Dialogs = Component.extend({
       details_btns.push(details_btn);
     };
 
-    this.dialogContainerEl.selectAll('div').data(details_btns)
+    this.element.selectAll('div').data(details_btns)
       .enter().append("div")
       .attr('class', function (d) {
         var cls = 'vzb-dialogs-dialog';
