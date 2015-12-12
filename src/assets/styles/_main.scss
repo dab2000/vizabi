@@ -27,32 +27,28 @@
     padding: 10px;
   }
 
-  .vzb-tool-content {
-    @include position(absolute, 0);
+  .vzb-tool-stage {
+    @include position(absolute, 0 $size-button-list 0 0);
+    transform: translate3d(0, 0, 0);
 
-    .vzb-tool-stage {
-      @include position(absolute, 0 $size-button-list 0 0);
-      transform: translate3d(0, 0, 0);
-
-      .vzb-tool-viz {
-        @include position(absolute, 0 0 $size-timeslider 0);
-      }
-
-      .vzb-tool-timeslider {
-        @include position(absolute, null 0 0 0);
-        height: $size-timeslider;
-      }
+    .vzb-tool-viz {
+      @include position(absolute, 0 0 $size-timeslider 0);
     }
 
-    .vzb-tool-buttonlist {
-      @include position(absolute, 0 0 0 null);
-      background-color: $vzb-color-primary-lightest;
-      width: $size-button-list;
+    .vzb-tool-timeslider {
+      @include position(absolute, null 0 0 0);
+      height: $size-timeslider;
+    }
+  }
+
+  .vzb-tool-buttonlist {
+    @include position(absolute, 0 0 0 null);
+    background-color: $vzb-color-primary-lightest;
+    width: $size-button-list;
 //button
-      .vzb-buttonlist-container-buttons {
-        overflow: hidden;
-        white-space: normal;
-      }
+    .vzb-buttonlist-container-buttons {
+      overflow: hidden;
+      white-space: normal;
     }
   }
   // hide sections
@@ -60,10 +56,6 @@
 
     .vzb-tool-title {
       display: none;
-    }
-
-    .vzb-tool-content {
-      @include position(absolute, 0);
     }
   }
 
@@ -73,7 +65,7 @@
       display: none;
     }
 
-    .vzb-tool-content .vzb-tool-stage .vzb-tool-viz {
+    .vzb-tool-stage .vzb-tool-viz {
       @include position(absolute, 0);
     }
   }
@@ -84,12 +76,25 @@
       display: none;
     }
 
-    .vzb-tool-content .vzb-tool-stage {
+    .vzb-tool-stage {
       @include position(absolute, 0 0 0 0);
     }
   }
   //Responsiveness
   &.vzb-small {
+    $pos-top: $height-title - 8px;
+    @include position(absolute, $pos-top 0 0 0);
+
+    .vzb-tool-stage {
+      .vzb-tool-viz {
+        @include position(absolute, 0 0 $size-timeslider-small 0);
+      }
+
+      .vzb-tool-timeslider {
+        height: $size-timeslider-small;
+      }
+    }
+
     &.vzb-portrait {
       .vzb-tool-stage { 
         @include position(absolute, 0 0 $size-button-list-small 0);
@@ -107,40 +112,27 @@
       height: $height-title - 8px;
     }
 
-    .vzb-tool-content {
-      $pos-top: $height-title - 8px;
-      @include position(absolute, $pos-top 0 0 0);
+    &.vzb-buttonlist-off {
+      @include position(absolute, 0 0 0 0);
 
       .vzb-tool-stage {
-        .vzb-tool-viz {
-          @include position(absolute, 0 0 $size-timeslider-small 0);
-        }
-
-        .vzb-tool-timeslider {
-          height: $size-timeslider-small;
-        }
+        @include position(absolute, 0 0 0 0);
       }
-    }
-
-    &.vzb-buttonlist-off {
 
       .vzb-tool-buttonlist {
         display: none;
       }
-
-      .vzb-tool-content .vzb-tool-stage {
-        @include position(absolute, 0 0 0 0);
-      }
     }
 
     &.vzb-timeslider-off {
+      @include position(absolute, 0);
+
+      .vzb-tool-stage .vzb-tool-viz {
+        @include position(absolute, 0);
+      }
 
       .vzb-tool-timeslider {
         display: none;
-      }
-
-      .vzb-tool-content .vzb-tool-stage .vzb-tool-viz {
-        @include position(absolute, 0);
       }
     }
 
@@ -149,15 +141,13 @@
     }
   }
   &.vzb-medium {
-    .vzb-tool-content {
-      .vzb-tool-stage {
-        .vzb-tool-viz {
-          @include position(absolute, 0 0 $size-timeslider-medium 0);
-        }
+    .vzb-tool-stage {
+      .vzb-tool-viz {
+        @include position(absolute, 0 0 $size-timeslider-medium 0);
+      }
 
-        .vzb-tool-timeslider {
-          height: $size-timeslider-medium;
-        }
+      .vzb-tool-timeslider {
+        height: $size-timeslider-medium;
       }
     }
   }
@@ -167,32 +157,30 @@
  
   &.vzb-large {
     &.vzb-button-expand-true {
-      .vzb-tool-content {
-        display: flex;
+      display: flex;
 
-        .vzb-tool-stage {
-          flex: 1 auto;
-          display: flex;
-          flex-direction: column;
-          position: static;
-        }
-      
-        .vzb-tool-dialogs {
-          flex: 0 0 $vzb-button-expand-width;
-          display: flex;
-          flex-direction: column;
-          position: static;
-          margin-bottom: $vzb-button-expand-height;
-          background-color: $vzb-color-primary-lightest;
-  
-          //width: $vzb-button-expand-width;
-        }
-  
-        .vzb-tool-buttonlist {
-          width: $vzb-button-expand-width;
-          height: $vzb-button-expand-height;
-          top: auto;
-        }
+      .vzb-tool-stage {
+        flex: 1 auto;
+        display: flex;
+        flex-direction: column;
+        position: static;
+      }
+    
+      .vzb-tool-dialogs {
+        flex: 0 0 $vzb-button-expand-width;
+        display: flex;
+        flex-direction: column;
+        position: static;
+        margin-bottom: $vzb-button-expand-height;
+        background-color: $vzb-color-primary-lightest;
+
+        //width: $vzb-button-expand-width;
+      }
+
+      .vzb-tool-buttonlist {
+        width: $vzb-button-expand-width;
+        height: $vzb-button-expand-height;
+        top: auto;
       }
     }
   }

@@ -346,9 +346,6 @@ $vzb-dialog-content-height: 250px;
 &.vzb-large {
   &.vzb-button-expand-true {
     .vzb-tool-dialogs {
-      display: flex;
-      flex-direction: column;
-      flex: auto;
       overflow-x: hidden;
       overflow-y: auto;
 
