@@ -191,8 +191,9 @@ var ButtonList = Component.extend({
     }
 
     if (button_expand.length !== 0) {
-        d3.select(this.root.element).classed("vzb-button-expand-true", true);
+        d3.select(this.root.element).classed("vzb-dialog-expand-true", true);
     }
+    
     var button_list = [].concat(button_expand);
 
     this.model.ui.buttons.forEach(function(button) {
@@ -222,23 +223,17 @@ var ButtonList = Component.extend({
         btn_config = _this._available_buttons[id];
 
 
-       // _this.root.findChildByName("gapminder-treemenu")
-
-      //if it's a dialog, open
-      if(btn_config && btn_config.dialog) {
-
-        //close if it's open
-        if(classes.indexOf(class_active) !== -1) {
-          _this.closeDialog(id);
-        } else {
-          _this.openDialog(id);
-        }
-      }
-      //otherwise, execute function
-      else if(btn_config.func) {
+      if(btn_config && btn_config.func) {
         btn_config.func(id);
       }
+      
+      var btn_active = classes.indexOf(class_active) === -1;
 
+      btn.classed(class_active, btn_active);
+      var evt = {};
+      evt['id'] = id;
+      evt['active'] = btn_active;
+      _this.trigger('click', evt);
     });
 
     //store body overflow
@@ -248,9 +243,6 @@ var ButtonList = Component.extend({
     this.setBubbleLock();
     this.setPresentationMode();
     
-    this.dialogsComp = this.root.findChildByName("gapminder-dialogs")
-      .closeAllCallback(this.closeAllDialogs.bind(this));
-
   },
 
   /*
@@ -455,52 +447,14 @@ var ButtonList = Component.extend({
    * @param {String} id button id
    */
   openDialog: function(id) {
-
-    //this.closeAllDialogs();
-
     var btn = this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']");
-    //var dialog = this.element.selectAll(".vzb-buttonlist-dialog[data-btn='" + id + "']");
 
-    //this._active_comp = this.components[this._available_buttons[id].component];
-
-    //this._active_comp.beforeOpen();
-    //add classes
     btn.classed(class_active, true);
-    //dialog.classed(class_active, true);
+    
+    
 
-    //this.bringForward(id);
-
-    if (this.getLayoutProfile() === 'large' && this.model.ui.buttons_expand.indexOf(id) !== -1) {
-      btn.classed(class_hide_btn, true);
-      //dialog.classed(class_expand_dialog, true);
-    }
-    this.dialogsComp
-      .closeCallback(this.closeDialog.bind(this))
-      .pinCallback(this.pinDialog.bind(this))
-      .openDialog(id);
-
-    //call component function
-    //this._active_comp.open();
-  },
-
-
-  pinDialog: function(button) {
-    var id = typeof button === 'string' ? button : button.getAttribute('data-dialogtype');
-    var btn = this.element.select(".vzb-buttonlist-btn[data-btn='" + id + "']");
-    //var dialog = this.element.select(".vzb-buttonlist-dialog[data-btn='" + id + "']");
-    if(this._available_buttons[id].ispin) {
-      // button.textContent = '';
-      btn.classed('pinned', false);
-      //this.element.select(".vzb-buttonlist-dialog[data-btn='" + id + "']").classed('pinned', false);
-      this._available_buttons[id].ispin = false;
-      //this._active_comp.isPin = false;
-    } else {
-      //  button.textContent = '';
-      btn.classed('pinned', true);
-      //dialog.classed('pinned', true);
-      this._available_buttons[id].ispin = true;
-      //this._active_comp.isPin = true;
-    }
+    //this.root.findChildByName("gapminder-dialogs")
+    //  .openDialog(id);
   },
 
 
@@ -510,72 +464,11 @@ var ButtonList = Component.extend({
    */
   closeDialog: function(id) {
     var btn = this.element.selectAll(".vzb-buttonlist-btn[data-btn='" + id + "']");
-    //var dialog = this.element.selectAll(".vzb-buttonlist-dialog[data-btn='" + id + "']");
 
-    //this._active_comp = this.components[this._available_buttons[id].component];
-
-    if(this._available_buttons[id].ispin)
-      this.pinDialog(id);
-
-    //if(this._active_comp) {
-    //  this._active_comp.beforeClose();
-    //}
-    //remove classes
     btn.classed(class_active, false);
-    //dialog.classed(class_active, false);
 
-    if (this.getLayoutProfile() === 'large' && this.model.ui.buttons_expand.indexOf(id) !== -1) {
-      btn.classed(class_hide_btn, false);
-      //dialog.classed(class_expand_dialog, false);
-    }
-
-    //call component close function
-    //if(this._active_comp) {
-    //  this._active_comp.close();
-    // }
-    //this._active_comp = false;
-    this.dialogsComp
-      .closeCallback(null)
-      .pinCallback(this.pinDialog.bind(this))
-      .closeDialog(id);
-  },
-
-  /*
-   * Close all dialogs
-   */
-  closeAllDialogs: function(forceclose) {
-    //remove classes
-    var btnClass = forceclose ? ".vzb-buttonlist-btn" : ".vzb-buttonlist-btn:not(.pinned)";
-    //var dialogClass = forceclose ? ".vzb-buttonlist-dialog" : ".vzb-buttonlist-dialog:not(.pinned)";
-    var all_btns = this.element.selectAll(btnClass);
-    //var all_dialogs = this.element.selectAll(dialogClass);
-    if(forceclose)
-      this.unpinAllDialogs();
-
-    //if(this._active_comp && (forceclose || !this._available_buttons[this._active_comp.name].ispin)) {
-    //  this._active_comp.beforeClose();
-    //}
-
-    all_btns.classed(class_active, false);
-    //all_dialogs.classed(class_active, false);
-
-    //call component close function
-    //if(this._active_comp && (forceclose || !this._available_buttons[this._active_comp.name].ispin)) {
-    //  this._active_comp.close();
-    //}
-    //if(this._active_comp && !this._available_buttons[this._active_comp.name].ispin)
-    //  this._active_comp = false;
-
-    //this.model.state.entities.setNeedUpdate();
-  },
-
-  unpinAllDialogs: function() {
-    var availBtns = this._available_buttons;
-    var keys = Object.keys(availBtns);
-    keys.forEach(function(dialogName) {
-      if(availBtns[dialogName].ispin)
-        this.pinDialog(dialogName);
-    }.bind(this));
+    //this.root.findChildByName("gapminder-dialogs")
+    //  .closeDialog(id);
   },
 
   toggleBubbleTrails: function() {

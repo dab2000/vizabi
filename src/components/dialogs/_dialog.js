@@ -183,6 +183,7 @@ var Dialog = Component.extend({
       this.placeholderEl.style('top', ''); // issues: 369 & 442
     }
     this.isOpen = false;
+    this.trigger('close');
   },
 
 
