@@ -562,13 +562,15 @@ var ButtonList = Component.extend({
     //restore body overflow
     document.body.style.overflow = body_overflow;
 
+    this.root.layout.resizeHandler();
+
     //force window resize event
-    (function() {
-      event = window.document.createEvent("HTMLEvents");
-      event.initEvent("resize", true, true);
-      event.eventName = "resize";
-      window.dispatchEvent(event);
-    })();
+    // utils.defer(function() {
+    //   event = window.document.createEvent("HTMLEvents");
+    //   event.initEvent("resize", true, true);
+    //   event.eventName = "resize";
+    //   window.dispatchEvent(event);
+    // });
   }
 
 });

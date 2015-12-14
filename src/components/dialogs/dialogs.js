@@ -26,7 +26,6 @@ var Dialogs = Component.extend({
     //set properties
     var _this = this;
     this.name = 'gapminder-dialogs';
-    //this.template = '<div class="vzb-dialogs"></div>';
     this._curr_dialog_index = 20;
 
     
@@ -117,6 +116,8 @@ var Dialogs = Component.extend({
       this._addDialogs();
       this.root.findChildByName("gapminder-buttonlist")
         .on("click", function(evt, button) {
+          if(!_this._available_dialogs[button.id]) return;
+
           if(button.active) {
             _this.openDialog(button.id)
           } else {
@@ -247,7 +248,7 @@ var Dialogs = Component.extend({
    * @param {String} id dialog id
    */
   openDialog: function(id) {
-
+    
     this.closeAllDialogs();
 
     var dialog = this.element.selectAll(".vzb-dialogs-dialog[data-btn='" + id + "']");
@@ -270,7 +271,6 @@ var Dialogs = Component.extend({
 
 
   pinDialog: function(id) {
-    //var id = typeof button === 'string' ? button : d3.select(button).datum();
     var dialog = this.element.select(".vzb-dialogs-dialog[data-btn='" + id + "']");
 
     if(this._available_dialogs[id].ispin) {

@@ -10,8 +10,11 @@
   $size-timeslider: 80px;
   $size-timeslider-medium: 50px;
   $size-timeslider-small: 40px;
-  @include position(absolute, 0);
   @include user-select(none);
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
   font-family: $vzb-font-family;
   font-size: $vzb-font-size-base; //important to set the base in px
   overflow: hidden;
@@ -28,21 +31,24 @@
   }
 
   .vzb-tool-stage {
-    @include position(absolute, 0 $size-button-list 0 0);
+    flex: 1 auto;
+    display: flex;
+    flex-direction: column;
+
     transform: translate3d(0, 0, 0);
 
     .vzb-tool-viz {
-      @include position(absolute, 0 0 $size-timeslider 0);
+      flex: 1 auto;
+      position: relative;
     }
 
     .vzb-tool-timeslider {
-      @include position(absolute, null 0 0 0);
+      flex: 0 0 $size-timeslider; 
       height: $size-timeslider;
     }
   }
 
   .vzb-tool-buttonlist {
-    @include position(absolute, 0 0 0 null);
     background-color: $vzb-color-primary-lightest;
     width: $size-button-list;
 //button
@@ -53,55 +59,45 @@
   }
   // hide sections
   &.vzb-title-off {
-
     .vzb-tool-title {
       display: none;
     }
   }
 
   &.vzb-timeslider-off {
-
     .vzb-tool-timeslider {
       display: none;
-    }
-
-    .vzb-tool-stage .vzb-tool-viz {
-      @include position(absolute, 0);
     }
   }
 
   &.vzb-buttonlist-off {
-
     .vzb-tool-buttonlist {
       display: none;
     }
-
-    .vzb-tool-stage {
-      @include position(absolute, 0 0 0 0);
-    }
   }
+
   //Responsiveness
   &.vzb-small {
-    $pos-top: $height-title - 8px;
-    @include position(absolute, $pos-top 0 0 0);
+    //$pos-top: $height-title - 8px;
+    //@include position(absolute, $pos-top 0 0 0);
 
     .vzb-tool-stage {
-      .vzb-tool-viz {
-        @include position(absolute, 0 0 $size-timeslider-small 0);
-      }
-
       .vzb-tool-timeslider {
+        flex: 0 0 $size-timeslider-small;
         height: $size-timeslider-small;
       }
     }
 
+    .vzb-tool-buttonlist {
+      flex: 0 0 $size-button-list;
+      position: relative;
+    }
+
     &.vzb-portrait {
-      .vzb-tool-stage { 
-        @include position(absolute, 0 0 $size-button-list-small 0);
-      }
+      flex-direction: column;
         
       .vzb-tool-buttonlist {
-        @include position(absolute, auto 0 0 0);
+        flex: 0 0 $size-button-list-small;
         height: $size-button-list-small;
         width: auto;
       }
@@ -113,24 +109,12 @@
     }
 
     &.vzb-buttonlist-off {
-      @include position(absolute, 0 0 0 0);
-
-      .vzb-tool-stage {
-        @include position(absolute, 0 0 0 0);
-      }
-
       .vzb-tool-buttonlist {
         display: none;
       }
     }
 
     &.vzb-timeslider-off {
-      @include position(absolute, 0);
-
-      .vzb-tool-stage .vzb-tool-viz {
-        @include position(absolute, 0);
-      }
-
       .vzb-tool-timeslider {
         display: none;
       }
@@ -142,14 +126,17 @@
   }
   &.vzb-medium {
     .vzb-tool-stage {
-      .vzb-tool-viz {
-        @include position(absolute, 0 0 $size-timeslider-medium 0);
-      }
-
       .vzb-tool-timeslider {
+        flex: 0 0 $size-timeslider-medium; 
         height: $size-timeslider-medium;
       }
     }
+
+    .vzb-tool-buttonlist {
+      flex: 0 0 $size-button-list;
+      position: relative;
+    }
+
   }
 
   $vzb-button-expand-width: 290px;
@@ -157,15 +144,6 @@
  
   &.vzb-large {
     &.vzb-dialog-expand-true {
-      display: flex;
-
-      .vzb-tool-stage {
-        flex: 1 auto;
-        display: flex;
-        flex-direction: column;
-        position: static;
-      }
-    
       .vzb-tool-dialogs {
         flex: 0 0 $vzb-button-expand-width;
         display: flex;
@@ -178,9 +156,10 @@
       }
 
       .vzb-tool-buttonlist {
+        @include position(absolute, auto 0 0 null);
+
         width: $vzb-button-expand-width;
         height: $vzb-button-expand-height;
-        top: auto;
       }
     }
   }
