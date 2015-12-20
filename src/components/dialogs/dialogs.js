@@ -43,39 +43,30 @@ var Dialogs = Component.extend({
     this._available_dialogs = {
       'find': {
         dialog: dialogs.find,
-        ispin: false
       },
       'show': {
         dialog: dialogs.show,
-        ispin: false
       },
       'more-options': {
         dialog: dialogs.moreoptions,
-        ispin: false
       },
       'colors': {
         dialog: dialogs.colors,
-        ispin: false
       },
       'size': {
         dialog: dialogs.size,
-        ispin: false
       },
       'axes': {
         dialog: dialogs.axes,
-        ispin: false
       },
       'axesmc': {
         dialog: dialogs.axesmc,
-        ispin: false
       },
       'stack': {
         dialog: dialogs.stack,
-        ispin: false
       },
-      '_default': {
-        dialog: false,
-        ispin: false
+      'speed': {
+        dialog: dialogs.speed
       }
     };
     
@@ -135,12 +126,12 @@ var Dialogs = Component.extend({
 
       
       //TODO: check close
-      var close_buttons = this.element.selectAll(".vzb-dialogs-dialog").select("[data-click='closeDialog']");
+      var close_buttons = this.element.selectAll(".vzb-popup").select(".vzb-popup>.vzb-dialog-modal>.vzb-dialog-buttons>[data-click='closeDialog']");
       close_buttons.on('click', function(d, i) {
         _this.closeDialog(d.id);
       });
 
-      var pinDialog = this.element.selectAll("[data-click='pinDialog']");
+      var pinDialog = this.element.selectAll(".vzb-popup").select(".vzb-popup>.vzb-dialog-modal>[data-click='pinDialog']");
       pinDialog.on('click', function(d, i) {
         _this.pinDialog(d.id);
       });
@@ -264,7 +255,7 @@ var Dialogs = Component.extend({
   },
   
   bringForward: function(id) {
-    var dialog = this.element.select(".vzb-dialogs-dialog[data-btn='" + id + "']");
+    var dialog = this.element.select(".vzb-popup.vzb-dialogs-dialog[data-btn='" + id + "']");
     dialog.style('z-index', this._curr_dialog_index);
     this._curr_dialog_index += 10;
   },
@@ -278,7 +269,7 @@ var Dialogs = Component.extend({
     
     this.closeAllDialogs();
 
-    var dialog = this.element.selectAll(".vzb-dialogs-dialog[data-btn='" + id + "']");
+    var dialog = this.element.selectAll(".vzb-popup.vzb-dialogs-dialog[data-btn='" + id + "']");
 
     this._active_comp = this.components[this._available_dialogs[id].component];
 
@@ -298,7 +289,7 @@ var Dialogs = Component.extend({
 
 
   pinDialog: function(id) {
-    var dialog = this.element.select(".vzb-dialogs-dialog[data-btn='" + id + "']");
+    var dialog = this.element.select(".vzb-popup.vzb-dialogs-dialog[data-btn='" + id + "']");
 
     if(this._available_dialogs[id].ispin) {
       dialog.classed('pinned', false);
@@ -315,7 +306,7 @@ var Dialogs = Component.extend({
    * @param {String} id dialog id
    */
   closeDialog: function(id) {
-    var dialog = this.element.selectAll(".vzb-dialogs-dialog[data-btn='" + id + "']");
+    var dialog = this.element.selectAll(".vzb-popup.vzb-dialogs-dialog[data-btn='" + id + "']");
 
     this._active_comp = this.components[this._available_dialogs[id].component];
 
@@ -348,7 +339,7 @@ var Dialogs = Component.extend({
   closeAllDialogs: function(forceclose) {
     var _this = this;
     //remove classes   
-    var dialogClass = forceclose ? ".vzb-dialogs-dialog.vzb-active" : ".vzb-dialogs-dialog.vzb-active:not(.pinned)";
+    var dialogClass = forceclose ? ".vzb-popup.vzb-dialogs-dialog.vzb-active" : ".vzb-popup.vzb-dialogs-dialog.vzb-active:not(.pinned)";
     var all_dialogs = this.element.selectAll(dialogClass);
       all_dialogs.each(function(d) {
         _this.closeDialog(d.id)

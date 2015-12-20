@@ -25,95 +25,14 @@ var MoreOptions = Dialog.extend({
    */
   init: function(config, parent) {
     this.name = 'moreoptions';
-// 
-//     this.components = [{
-//       component: indicatorpicker,
-//       placeholder: '.vzb-xaxis-selector',
-//       model: ["state.marker", "language"],
-//       markerID: "axis_x"
-//     },{
-//       component: minmaxinputs,
-//       placeholder: '.vzb-xaxis-minmax',
-//       model: ["state.marker", "language"],
-//       markerID: "axis_x",
-//       ui: {
-//         selectMinMax: false,
-//         selectFakeMinMax: true
-//       }
-//     }, {
-//       component: indicatorpicker,
-//       placeholder: '.vzb-yaxis-selector',
-//       model: ["state.marker", "language"],
-//       markerID: "axis_y"
-//     }, {
-//       component: minmaxinputs,
-//       placeholder: '.vzb-yaxis-minmax',
-//       model: ["state.marker", "language"],
-//       markerID: "axis_y",
-//       ui: {
-//         selectMinMax: false,
-//         selectFakeMinMax: true
-//       }
-//     }, {
-//       component: simplecheckbox,
-//       placeholder: '.vzb-axes-options',
-//       model: ["state", "language"],
-//       submodel: 'time',
-//       checkbox: 'adaptMinMaxZoom'
-//     }, {
-//       component: indicatorpicker,
-//       placeholder: '.vzb-saxis-selector',
-//       model: ["state.marker", "language"],
-//       markerID: "size"
-//     }, {
-//       component: bubblesize,
-//       placeholder: '.vzb-dialog-bubblesize',
-//       model: ["state.marker.size"],
-//       ui: {
-//         show_button: false
-//       }
-//     }, {
-//       component: indicatorpicker,
-//       placeholder: '.vzb-caxis-selector',
-//       model: ["state.marker", "language"],
-//       markerID: "color"
-//     }, {
-//       component: colorlegend,
-//       placeholder: '.vzb-clegend-container',
-//       model: ["state.marker.color", "state.entities", "language"]
-//     }, {
-//       component: simpleslider,
-//       placeholder: '.vzb-dialog-bubbleopacity-regular',
-//       model: ["state.entities"],
-//       arg: "opacityRegular"
-//     }, {
-//       component: simpleslider,
-//       placeholder: '.vzb-dialog-bubbleopacity-selectdim',
-//       model: ["state.entities"],
-//       arg: "opacitySelectDim"
-//     }, {
-//       component: simpleslider,
-//       placeholder: '.vzb-dialog-delay-slider',
-//       model: ["state.time"],
-//       arg: "delay",
-//       properties: {min:1, max:5, step:0.1, scale: d3.scale.linear()
-//         .domain([1,2,3,4,5])
-//         .range([1200,900,450,200,75])
-//       }
-//     },
-//     {
-//       component: simplecheckbox,
-//       placeholder: '.vzb-presentationmode-switch',
-//       model: ["ui", "language"],
-//       checkbox: 'presentation'
-//     }];
-
+    
     this._super(config, parent);
   },
 
   readyOnce: function() {
     var _this = this;
     this.element = d3.select(this.element);
+    this.contentEl = this.element.select('.vzb-dialog-content');
     
     var dialog_popup = this.model.ui.dialogs.popup || [];
     var dialog_moreoptions = this.model.ui.dialogs['more-options'] || [];
@@ -135,10 +54,10 @@ var MoreOptions = Dialog.extend({
     //accordion
     this.accordionEl = this.element.select('.vzb-accordion');
     if(this.accordionEl) {
-      this.accordionEl.selectAll('.vzb-accordion-section')
-        .select('.vzb-accordion-section-title')
-        .on('click', function() {
-          var sectionEl = d3.select(this.parentNode);
+      var titleEl = this.accordionEl.selectAll('.vzb-accordion-section')
+        .select('.vzb-dialog-title>span:first-child')
+      titleEl.on('click', function(d) {
+          var sectionEl = _this.components[d.component].placeholderEl;
           var activeEl = _this.accordionEl.select('.vzb-accordion-active');
           if(activeEl) {
             activeEl.classed('vzb-accordion-active', false);
@@ -152,8 +71,7 @@ var MoreOptions = Dialog.extend({
 
   resize: function() {
     var totalHeight = this.root.element.offsetHeight - 200;
-    var content = this.element.select('.vzb-dialog-content');
-    content.style('max-height', totalHeight + 'px');
+    this.contentEl.style('max-height', totalHeight + 'px');
 
     this._super();
   },
@@ -181,7 +99,7 @@ var MoreOptions = Dialog.extend({
     for(var i = 0; i < dialog_list.length; i++) {
 
       var dlg = dialog_list[i];
-      var dlg_config = this.parent._available_dialogs[dlg];
+      var dlg_config = utils.deepClone(this.parent._available_dialogs[dlg]);
 
       //if it's a dialog, add component
       if(dlg_config && dlg_config.dialog) {
@@ -190,31 +108,32 @@ var MoreOptions = Dialog.extend({
         //add corresponding component
         comps.push({
           component: dlg_config.dialog,
-          placeholder: '.vzb-dialogs-dialog[data-dlg="' + dlg + '"]',
+          placeholder: '.vzb-dialogs-dialog[data-btn="' + dlg + '"]',
           model: ["state", "ui", "language"]
         });
 
         dlg_config.component = comps.length - 1;
+      
+
+//      //add template data
+//      var d = (dlg_config) ? dlg : "_default";
+//      var details_dlg = this.parent._available_dialogs[d];
+
+        dlg_config.id = dlg;
+        details_dlgs.push(dlg_config);
       }
-
-      //add template data
-      var d = (dlg_config) ? dlg : "_default";
-      var details_dlg = this.parent._available_dialogs[d];
-
-      details_dlg.id = dlg;
-      details_dlgs.push(details_dlg);
     };
 
-    this.element.selectAll('div').data(details_dlgs)
+    this.contentEl.selectAll('div').data(details_dlgs)
       .enter().append("div")
       .attr('class', function (d) {
-        var cls = 'vzb-dialogs-dialog';
-        if (dialog_popup && dialog_popup.indexOf(d.id) > -1) {
-            cls += ' vzb-popup';
-        }
-        if (dialog_sidebar && dialog_sidebar.indexOf(d.id) > -1) {
-            cls += ' vzb-sidebar';
-        }
+        var cls = 'vzb-dialogs-dialog vzb-moreoptions vzb-accordion-section';
+//        if (dialog_popup && dialog_popup.indexOf(d.id) > -1) {
+//            cls += ' vzb-mo';
+//        }
+//        if (dialog_sidebar && dialog_sidebar.indexOf(d.id) > -1) {
+//            cls += ' vzb-sidebar';
+//        }
 
         return cls;
       })
@@ -231,15 +150,15 @@ var MoreOptions = Dialog.extend({
       _this.on('resize', function() {
         subcomp.trigger('resize');
       });
-      subcomp.on('dragstart', function() {
-        _this.bringForward(subcomp.name);
-      });
-      subcomp.on('close', function() {
-        this.placeholderEl.each( function(d) {
-          _this.root.findChildByName("gapminder-buttonlist")
-            .setButtonActive(d.id, false);
-        });
-      });
+//      subcomp.on('dragstart', function() {
+//        _this.bringForward(subcomp.name);
+//      });
+//      subcomp.on('close', function() {
+//        this.placeholderEl.each( function(d) {
+//          _this.root.findChildByName("gapminder-buttonlist")
+//            .setButtonActive(d.id, false);
+//        });
+//      });
     });
     
   }

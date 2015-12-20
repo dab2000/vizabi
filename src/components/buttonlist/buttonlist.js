@@ -155,7 +155,7 @@ var ButtonList = Component.extend({
   readyOnce: function() {
 
     var _this = this;
-    var button_expand = this.model.ui.dialogs.sidebar;
+    var button_expand = this.model.ui.dialogs.sidebar || [];
 
     this.element = d3.select(this.placeholder);
 

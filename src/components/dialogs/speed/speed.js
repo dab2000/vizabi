@@ -2,7 +2,7 @@ import * as utils from 'base/utils';
 import Component from 'base/component';
 import Dialog from '../_dialog';
 
-//import { bubblesize, indicatorpicker } from 'components/_index'
+import { simpleslider } from 'components/_index'
 /*
  * Size dialog
  */
@@ -22,7 +22,7 @@ init: function(config, parent) {
   this.components = [
   {
     component: simpleslider,
-    placeholder: '.vzb-dialog-delay-slider',
+    placeholder: '.vzb-dialog-placeholder',
     model: ["state.time"],
     arg: "delay",
     properties: {min:1, max:5, step:0.1, scale: d3.scale.linear()
