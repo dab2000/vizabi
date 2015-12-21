@@ -67,6 +67,12 @@ var Dialogs = Component.extend({
       },
       'speed': {
         dialog: dialogs.speed
+      },
+      'opacity': {
+        dialog: dialogs.opacity
+      },
+      'presentation': {
+        dialog: dialogs.presentation
       }
     };
     

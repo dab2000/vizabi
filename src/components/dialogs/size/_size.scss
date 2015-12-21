@@ -1,9 +1,25 @@
+.vzb-dialogs-dialog {
+  &[data-btn="size"] {
+    &.vzb-moreoptions {
+      .vzb-dialog-title {
+        .vzb-ip-select {
+          margin-top: 25px;
+          margin-left: 38px;
+          line-height: 20px;
+          font-weight: 700;
+          text-transform: none;
+        }
+      }
+    }
+  }
+}
+
 //responsiveness
 &.vzb-large {
   &.vzb-dialog-expand-true {
     .vzb-dialogs-dialog {
-      &.vzb-sidebar {
-        &[data-btn="size"] {
+      &[data-btn="size"] {
+        &.vzb-sidebar {
           flex: none;
 
           .vzb-dialog-content {

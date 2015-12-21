@@ -4,6 +4,17 @@
       .vzb-dialog-content {
         min-height: 140px;
       }
+      &.vzb-moreoptions {
+        .vzb-dialog-title {
+          .vzb-ip-select {
+            margin-top: 25px;
+            margin-left: 38px;
+            line-height: 20px;
+            font-weight: 700;
+            text-transform: none;
+          }
+        }
+      }
     }
   }
 }
