@@ -523,7 +523,7 @@ BubbleChart.define('default_model', {
   },
   language: language,
   ui: {
-    'vzb-tool-bubble-chart': {
+    'vzb-tool-bubblechart': {
       whenHovering: {
         showProjectionLineX: true,
         showProjectionLineY: true,
@@ -532,7 +532,8 @@ BubbleChart.define('default_model', {
       },
       labels: {
         autoResolveCollisions: true,
-        dragging: true
+        dragging: true,
+        nearestCornerLeash: true
       }
     },
     presentation: false
