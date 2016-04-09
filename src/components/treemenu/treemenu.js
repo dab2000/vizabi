@@ -24,6 +24,8 @@ var css = {
   list: 'vzb-treemenu-list',
   list_outer: 'vzb-treemenu-list-outer',
   list_item: 'vzb-treemenu-list-item',
+  list_item_leaf: 'vzb-treemenu-list-item-leaf',
+  leaf_item: 'vzb-treemenu-leaf-item',
   hasChild: 'vzb-treemenu-list-item-children',
   list_item_label: 'vzb-treemenu-list-item-label',
   list_top_level: 'vzb-treemenu-list-top',
@@ -998,7 +1000,7 @@ var TreeMenu = Component.extend({
         .on('click', function(d) {
           _this._selectIndicator(d, this)
         });
-
+      
       li.classed(css.list_item, true)
         .classed(css.hasChild, function(d) {
           return d['children'];
@@ -1008,6 +1010,33 @@ var TreeMenu = Component.extend({
         })
         .each(function(d) {
           var view = d3.select(this);
+
+          //deepLeaf
+          if(!d.children) {
+            var deepLeaf = view.append('li').attr('class', css.menuHorizontal + ' ' + css.list_outer + ' ' + css.list_item_leaf);
+            deepLeaf.append('span').classed(css.leaf_item, true)
+              .text(function(d) {
+                //Let the indicator "_default" in tree menu be translated differnetly for every hook type
+                var translated = _this.translator("indicator" + (d.id==="_default" ? "/" + hookType : "") + "/" + d.id);
+                if(translated.indexOf("indicator/")!==-1)utils.warn("translation missing: " + translated);
+                return translated;
+              });
+            deepLeaf.append('span').classed(css.leaf_item, true)
+              .text(function(d) {
+                //Let the indicator "_default" in tree menu be translated differnetly for every hook type
+                var translated = _this.translator("unit" + (d.id==="_default" ? "/" + hookType : "") + "/" + d.id);
+                if(translated.indexOf("unit/")!==-1)utils.warn("translation missing: " + translated);
+                return 'Units: ' + translated;
+              });
+            deepLeaf.append('span').classed(css.leaf_item, true)
+              .text(function(d) {
+                //Let the indicator "_default" in tree menu be translated differnetly for every hook type
+                var translated = _this.translator("description" + (d.id==="_default" ? "/" + hookType : "") + "/" + d.id);
+                if(translated.indexOf("description/")!==-1)utils.warn("translation missing: " + translated);
+                return translated;
+              });
+          }
+          
           if(d.id == _this.model.marker[markerID].which) {
             var parent = this.parentNode;
             d3.select(this).classed('item-active', true);
@@ -1026,7 +1055,8 @@ var TreeMenu = Component.extend({
           createSubmeny(view, d);
         });
     };
-    if (OPTIONS.IS_MOBILE) {
+    
+    if(OPTIONS.IS_MOBILE) {
       OPTIONS.MENU_DIRECTION = MENU_VERTICAL;
     } else {
       OPTIONS.MENU_DIRECTION = MENU_HORIZONTAL;
